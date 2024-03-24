@@ -10,3 +10,5 @@ MeloVerse
 - remove the page return default and global.css default except imports
 - change the layout.tsx from Inter to Figtree for font changes
 - change the tailwind.config.ts: remove everything inside extend
+- Hooks: usePathName, useMemo
+
