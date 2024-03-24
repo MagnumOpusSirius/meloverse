@@ -7,6 +7,10 @@ import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import { twMerge } from "tailwind-merge";
 import Button from "./Button";
 import useAuthModal from "@/hooks/useAuthModal";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useUser } from "@/hooks/useUser";
+import { FaUserAlt } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 interface HeaderProps {
     children: React.ReactNode;
@@ -20,17 +24,29 @@ const Header: React.FC<HeaderProps> = ({
     const authModal = useAuthModal();
     const router = useRouter();
 
-    const handleLogout = () => {
-        //
+    const supabaseClient = useSupabaseClient();
+    const { user } = useUser();
+
+    const handleLogout = async () => {
+        const { error } = await supabaseClient.auth.signOut();
+        // player.reset();
+        router.refresh();
+
+        if (error) {
+            toast.error(error.message);
+        } else {
+            toast.success('Logout successful');
+
+        }
     }
     return (
         <div
             className={twMerge(`
-            h-fit 
-            bg-gradient-to-b 
-            from-emerald-800 
-            p-6
-            `,
+                h-fit 
+                bg-gradient-to-b 
+                from-emerald-800 
+                p-6
+                `,
                 className
             )}>
 
@@ -39,30 +55,30 @@ const Header: React.FC<HeaderProps> = ({
                     <button
                         onClick={() => router.back()}
                         className="
-                        rounded-full 
-                        bg-black 
-                        flex 
-                        items-center 
-                        justify-center 
-                        cursor-pointer 
-                        hover:opacity-75 
-                        transition
-                        "
+                            rounded-full 
+                            bg-black 
+                            flex 
+                            items-center 
+                            justify-center 
+                            cursor-pointer 
+                            hover:opacity-75 
+                            transition
+                            "
                     >
                         <RxCaretLeft className="text-white" size={35} />
                     </button>
                     <button
                         onClick={() => router.forward()}
                         className="
-                        rounded-full 
-                        bg-black 
-                        flex 
-                        items-center 
-                        justify-center 
-                        cursor-pointer 
-                        hover:opacity-75 
-                        transition
-                        "
+                            rounded-full 
+                            bg-black 
+                            flex 
+                            items-center 
+                            justify-center 
+                            cursor-pointer 
+                            hover:opacity-75 
+                            transition
+                            "
                     >
                         <RxCaretRight className="text-white" size={35} />
                     </button>
@@ -71,63 +87,82 @@ const Header: React.FC<HeaderProps> = ({
                     <button
                         onClick={() => router.push('/')}
                         className="
-                        rounded-full 
-                        p-2 
-                        bg-white 
-                        flex 
-                        items-center 
-                        justify-center 
-                        cursor-pointer 
-                        hover:opacity-75 
-                        transition
-                        "
+                            rounded-full 
+                            p-2 
+                            bg-white 
+                            flex 
+                            items-center 
+                            justify-center 
+                            cursor-pointer 
+                            hover:opacity-75 
+                            transition
+                            "
                     >
                         <HiHome className="text-black" size={20}></HiHome>
                     </button>
                     <button
                         onClick={() => router.push('/search')}
                         className="
-                        rounded-full 
-                        p-2 
-                        bg-white 
-                        flex 
-                        items-center 
-                        justify-center 
-                        cursor-pointer 
-                        hover:opacity-75 
-                        transition
-                        "
+                            rounded-full 
+                            p-2 
+                            bg-white 
+                            flex 
+                            items-center 
+                            justify-center 
+                            cursor-pointer 
+                            hover:opacity-75 
+                            transition
+                            "
                     >
                         <BiSearch className="text-black" size={20} />
                     </button>
                 </div>
                 <div className="flex justify-between items-center gap-x-4">
-                    <>
-                        <div>
+                    {user ? (
+                        <div className="flex gap-x-4 items-center">
                             <Button
-                                onClick={authModal.onOpen}
-                                className="
-                                    bg-transparent
-                                    text-neutral-300
-                                    font-medium
-                                "
+                                onClick={handleLogout}
+                                className="bg-white px-6 py-2"
                             >
-                                Sign up
+                                Logout
+                            </Button>
+                            <Button
+                                onClick={() => router.push('/account')}
+                                className="bg-white"
+                            >
+                                <FaUserAlt />
                             </Button>
                         </div>
-                        <div>
-                            <Button
-                                onClick={authModal.onOpen}
-                                className="
-                                    bg-white
-                                    px-6
-                                    py-2
-                                "
-                            >
-                                Login
-                            </Button>
-                        </div>
-                    </>
+
+
+                    ) : (
+                        <>
+                            <div>
+                                <Button
+                                    onClick={authModal.onOpen}
+                                    className="
+                                        bg-transparent
+                                        text-neutral-300
+                                        font-medium
+                                    "
+                                >
+                                    Sign up
+                                </Button>
+                            </div>
+                            <div>
+                                <Button
+                                    onClick={authModal.onOpen}
+                                    className="
+                                        bg-white
+                                        px-6
+                                        py-2
+                                    "
+                                >
+                                    Login
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
             {children}
