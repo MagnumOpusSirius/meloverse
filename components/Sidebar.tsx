@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { BiSearch } from "react-icons/bi";
 import { HiHome } from "react-icons/hi";
+import Box from "./Box";
 interface SidebarProps {
     children: React.ReactNode;
 }
@@ -26,8 +27,23 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         },
     ], [pathname]); //add pathname to list of dependencies
     return (
-        <div>
-            {children}
+        <div className="flex h-full">
+            <div
+                className="
+                hidden 
+                md:flex
+                flex-col
+                gap-y-2
+                bg-black
+                h-full
+                w-[300px]
+                p-2
+                "
+            >
+                <Box>
+                    Sidebar Navigation
+                </Box>
+            </div>
         </div>
     );
 }
