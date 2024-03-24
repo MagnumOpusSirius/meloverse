@@ -19,5 +19,11 @@ MeloVerse
 ### Note:
 - git ignore your password.txt and .env.local
 
+# Step 3:
+- Create providers for auth and supabase
+
+# Step 4:
+- Create a provider auth model and its functionality
+
 
 
