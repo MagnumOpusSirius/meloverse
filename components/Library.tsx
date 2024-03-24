@@ -2,10 +2,26 @@
 
 import { AiOutlinePlus } from "react-icons/ai";
 import { TbPlaylist } from "react-icons/tb";
+// import { Song } from "@/types";
+import useAuthModal from "@/hooks/useAuthModal";
+import useUploadModal from "@/hooks/useUploadModal";
+// import useSubscribeModal from "@/hooks/useSubscribeModal";
+// import useOnPlay from "@/hooks/useOnPlay";
+import { useUser } from "@/hooks/useUser";
 
 const Library = () => {
+    const authModal = useAuthModal();
+    //check if we are logged in or not!
+    const { user } = useUser();
+    const uploadModal = useUploadModal();
     const onClick = () => {
-        //handle upload later
+
+        if (!user) {
+            return authModal.onOpen();
+        }
+
+        return uploadModal.onOpen();
+
     };
     return (
         <div className="flex flex-col">
